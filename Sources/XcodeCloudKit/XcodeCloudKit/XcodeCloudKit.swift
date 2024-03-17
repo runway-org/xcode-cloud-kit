@@ -30,7 +30,8 @@ extension DefaultXcodeCloudKit: XcodeCloudKit {
                 return Product(
                     name: name,
                     id: product.id,
-                    repository: .init(id: repository.id, name: repository.name)
+                    repository: .init(id: repository.id, name: repository.name),
+                    transport: transport
                 )
             } else {
                 return nil
@@ -59,7 +60,12 @@ extension DefaultXcodeCloudKit: XcodeCloudKit {
         
         if let repository = repositories.first(where: { product.relationships?.primaryRepositories?.data?.first?.id == $0.id }),
            let name = product.attributes?.name {
-            return Product(name: name, id: product.id, repository: .init(id: repository.id, name: repository.name))
+            return Product(
+                name: name,
+                id: product.id,
+                repository: .init(id: repository.id, name: repository.name),
+                transport: transport
+            )
         } else {
             return nil
         }
