@@ -20,7 +20,7 @@ public struct Workflow {
             }
     }
     
-    public func build(with number: Int) async throws -> Build? {
+    public func build(withNumber number: Int) async throws -> Build? {
         try await allBuilds().first(where: { $0.number == number })
     }
 }
