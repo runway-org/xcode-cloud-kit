@@ -1,7 +1,7 @@
 public protocol XcodeCloudKit {
 }
 
-final class DefaultXcodeCloudKit: XcodeCloudKit {
+struct DefaultXcodeCloudKit: XcodeCloudKit {
     private let transport: Transport
     
     init(transport: Transport) {
