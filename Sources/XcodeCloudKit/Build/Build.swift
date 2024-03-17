@@ -6,4 +6,5 @@ public struct Build {
     let createdAt: Date?
     let endedAt: Date?
     let startedAt: Date?
+    let workflow: Workflow
 }
