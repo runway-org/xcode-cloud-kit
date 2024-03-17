@@ -1,5 +1,6 @@
 public protocol XcodeCloudKit {
     func allProducts() async throws -> [Product]
+    func product(withRepositoryName repository: String) async throws -> Product?
 }
 
 final class DefaultXcodeCloudKit {
@@ -34,5 +35,11 @@ extension DefaultXcodeCloudKit: XcodeCloudKit {
                 return nil
             }
         }
+    }
+    
+    public func product(withRepositoryName repository: String) async throws -> Product? {
+        let allProducts = try await allProducts()
+        
+        return allProducts.first(where: { $0.repository.name == repository })
     }
 }
