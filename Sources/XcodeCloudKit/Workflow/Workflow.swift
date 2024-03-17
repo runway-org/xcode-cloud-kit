@@ -1,7 +1,7 @@
 public struct Workflow {
-    let id: String
-    let name: String
-    let product: Product
+    public let id: String
+    public let name: String
+    public let product: Product
     
     let transport: Transport
     
