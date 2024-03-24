@@ -1,3 +1,5 @@
+import AppStoreConnect_Swift_SDK
+
 public struct Workflow {
     public let id: String
     public let name: String
@@ -29,22 +31,38 @@ public struct Workflow {
     public func start(atGitReference gitReference: GitReference) async throws {
         let gitRefsRequest = RequestBuilder.getGitReferences(forRepositoryId: product.repository.id)
         let gitRefs = try await transport.perform(request: gitRefsRequest)
-        guard let gitReferenceId = gitRefs.data.first(where: { $0.attributes?.name == gitReference.name })?.id else {
+        guard let gitReferenceId = gitRefs.data
+            .first(where: { xcGitRef in
+                switch (gitReference, xcGitRef.attributes?.kind) {
+                case (.branch(let name), .branch) where name == xcGitRef.attributes?.name: return true
+                case (.tag(let name), .tag) where name == xcGitRef.attributes?.name: return true
+                default: return false
+                }
+            })?.id else {
             return
         }
         
         let startWorkflowRequest = RequestBuilder.startWorkflow(withId: id, andGitReferenceId: gitReferenceId)
         _ = try await transport.perform(request: startWorkflowRequest)
     }
+    
+    private static func adapt(_ gitReference: GitReference) -> CiGitRefKind {
+        switch gitReference {
+        case .branch: return .branch
+        case .tag: return .tag
+        }
+    }
 }
 
 // Add more cases to this enuk
 public enum GitReference {
     case branch(name: String)
+    case tag(name: String)
     
     var name: String {
         switch self {
         case let .branch(name): return name
+        case let .tag(name): return name
         }
     }
 }
