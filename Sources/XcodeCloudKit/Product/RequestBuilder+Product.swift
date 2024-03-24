@@ -21,7 +21,7 @@ extension RequestBuilder {
             .id(productId)
             .workflows
         
-        return .init(path: "GET", method: allWorkflowsEndpoint.path, queryParameters: [("fields[ciWorkflows]", "name")])
+        return .init(path: allWorkflowsEndpoint.path, method: "GET", queryParameters: [("fields[ciWorkflows]", "name")])
     }
     
     static func workflow(with id: String) -> TransportRequest<CiWorkflowResponse> {
