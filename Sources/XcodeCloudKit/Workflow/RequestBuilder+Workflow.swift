@@ -1,4 +1,16 @@
 import AppStoreConnect_Swift_SDK
+import Foundation
+#if canImport(FoundationNetworking)
+import FoundationNetworking
+#endif
+
+struct StartWorkflowResponse: Decodable {
+    let data: DataClass
+    
+    struct DataClass: Decodable {
+        let id: String
+    }
+}
 
 extension RequestBuilder {
     static func allBuilds(for workflowId: String) -> TransportRequest<CiBuildRunsResponse> {
@@ -12,7 +24,7 @@ extension RequestBuilder {
         return .init(path: endpoint.path, method: endpoint.method, queryParameters: endpoint.query)
     }
     
-    static func startWorkflow(withId id: String, andGitReferenceId gitReferenceId: String) -> TransportRequest<CiBuildRunResponse> {
+    static func startWorkflow(withId id: String, andGitReferenceId gitReferenceId: String) -> TransportRequest<StartWorkflowResponse> {
         let requestRelationships = CiBuildRunCreateRequest
             .Data
             .Relationships(
