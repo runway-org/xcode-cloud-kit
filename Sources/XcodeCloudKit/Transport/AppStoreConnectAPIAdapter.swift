@@ -12,6 +12,7 @@ class AppStoreConnectSDKTransport: Transport {
             path: request.path,
             method: request.method,
             query: request.queryParameters,
+            body: request.body,
             id: ""
         )
 

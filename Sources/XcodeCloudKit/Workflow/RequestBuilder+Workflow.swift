@@ -32,7 +32,12 @@ extension RequestBuilder {
             .ciBuildRuns
             .post(buildRunCreateRequest)
         
-        return .init(path: workflowRun.path, method: workflowRun.method, queryParameters: workflowRun.query)
+        return .init(
+            path: workflowRun.path,
+            method: workflowRun.method,
+            queryParameters: workflowRun.query,
+            body: AnyEncodable(buildRunCreateRequest)
+        )
     }
     
     static func getGitReferences(forRepositoryId repositoryId: String) -> TransportRequest<ScmGitReferencesResponse> {
