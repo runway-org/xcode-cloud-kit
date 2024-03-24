@@ -1,6 +1,6 @@
 # XcodeCloudKit
 
-The Swift SDK that makes working with the Xcode Cloud endpoints from the App Store Connect API a breeze!
+`XcodeCloudKit` is a Swift SDK that makes working with the Xcode Cloud endpoints from the App Store Connect API a breeze!
 
 [![Build Status][build status badge]][build status]
 [![Platforms][platforms badge]][platforms]
