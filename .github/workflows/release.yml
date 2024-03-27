@@ -1,0 +1,58 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "*.*.*"
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.ref }}
+  cancel-in-progress: true
+
+env:
+  DEVELOPER_DIR: /Applications/Xcode_15.2.app/Contents/Developer
+
+jobs:
+  test_apple_platforms:
+    name: Test on iOS and macOS
+    runs-on: macOS-13
+    strategy:
+      matrix:
+        destination:
+          - "platform=macOS"
+          - "platform=iOS Simulator,name=iPhone 12"
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Test platform ${{ matrix.destination }}
+        run: set -o pipefail && xcodebuild -scheme XcodeCloudKit -destination "${{ matrix.destination }}" test | xcbeautify
+
+  test_linux:
+    name: Test Linux
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Install swiftly
+        run: curl -L https://swift-server.github.io/swiftly/swiftly-install.sh | bash -s -- -y
+      - name: Install the latest Swift toolchain
+        run: swiftly install latest
+      - name: Test
+        run: swift test
+
+  release:
+    needs: [test_apple_platforms, test_linux]
+    name: Create a new GitHub release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: woke
+        uses: get-woke/woke-action@v0
+        with:
+          fail-on-error: true
+      - name: Release
+        uses: softprops/action-gh-release@v2
+        with:
+          generate_release_notes: true
+          token: ${{ secrets.GITHUB_TOKEN }}
